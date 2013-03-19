@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#sinfo > ~/nodelist
+
+python py_parse/main.py
+
+
+
+
