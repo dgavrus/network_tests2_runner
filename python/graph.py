@@ -10,7 +10,7 @@ class DotGraph:
     def __connect_gear(self, gear):
         connect_gear_string = ""
         for i in xrange(self.num_main_switches):
-            connect_gear_string += 'v' + str(gear) + " -- " + 'v' + str(i) + \
+            connect_gear_string += '\t' + 'v' + str(gear) + " -- " + 'v' + str(i) + \
                 " [label=\"32Gbit/s\"]" + ';' + '\n'
         return connect_gear_string
         
@@ -24,9 +24,8 @@ class DotGraph:
     def print_graph(self):
         f = open("/home/" + get_username() + "/vertexes.tmp",'w')
         g = open("/home/" + get_username() + "/nodes.tmp",'w')
-       # f.write("graph topology {" + '\n')
         for i in xrange(self.num_main_switches):
-            f.write('v' + str(i) + " [label=\"main\"]" + ';' + '\n')
+            f.write('\t' + 'v' + str(i) + " [label=\"main\"]" + ';' + '\n')
         current_vertex = self.num_main_switches # current vertex number
         split_nodes = self.nodes.split(',') # get list of nodes
         
@@ -37,18 +36,17 @@ class DotGraph:
         for node in split_nodes:            
             if not gears.has_key(str(node)[:9]):
                 gears[str(node)[:9]] = current_vertex
-                f.write('v' + str(current_vertex) + " [label=\"gear-" + node[6:9] + "\"]" + ';' + '\n')
+                f.write('\t' + 'v' + str(current_vertex) + " [label=\"gear-" + node[6:9] + "\"]" + ';' + '\n')
                 g.write(self.__connect_gear(current_vertex))
-                g.write('v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 1) + " [label=\"32Gbit/s\"]" +  ';' + '\n')
-                g.write('v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 2) + " [label=\"32Gbit/s\"]" + ';' + '\n')
-                f.write('v' + str(current_vertex + 1) + " [label=\"switch1-" + node[6:9] + "\"]" + ';' + '\n')
-                f.write('v' + str(current_vertex + 2) + " [label=\"switch2-" + node[6:9] + "\"]" + ';' + '\n')
+                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 1) + " [label=\"32Gbit/s\"]" +  ';' + '\n')
+                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 2) + " [label=\"32Gbit/s\"]" + ';' + '\n')
+                f.write('\t' + 'v' + str(current_vertex + 1) + " [label=\"switch1-" + node[6:9] + "\"]" + ';' + '\n')
+                f.write('\t' + 'v' + str(current_vertex + 2) + " [label=\"switch2-" + node[6:9] + "\"]" + ';' + '\n')
                 current_vertex += 3
-            g.write(self.__connect_node(node, gears[str(node)[:9]], current_vertex) + " [label=\"32Gbit/s\"]" + ';' + '\n')
-            f.write('v' + str(current_vertex) + " [label=\"" + node + "\"]" + ';' + '\n')
+            g.write('\t' + self.__connect_node(node, gears[str(node)[:9]], current_vertex) + " [label=\"32Gbit/s\"]" + ';' + '\n')
+            f.write('\t' + 'v' + str(current_vertex) + " [label=\"" + node + "\"]" + ';' + '\n')
             current_vertex += 1
         
-       # f.write('}' + '\n')
         f.close()
         g.close()
         f = open("/home/" + get_username() + "/vertexes.tmp","r+")
