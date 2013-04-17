@@ -1,8 +1,8 @@
 from partition import Partition
-import pwd
-import os
+from username import get_username
+from graph import DotGraph
             
-username = pwd.getpwuid( os.getuid() )[ 0 ]
+username = get_username()
 f = open("/home/" + username + "/nodelist")
 
 in_string = raw_input().split(' ')
@@ -14,6 +14,7 @@ for split_string in in_string:
             break
 
 nodelist = f.readlines()
+f.close()
 del(nodelist[0])
 
 partitions = []
@@ -47,6 +48,10 @@ nodes_in_partition_file = open("/home/" + username + "/nodes",'w')
 for i in xrange(len(all_nodes_sorted)):
     nodes_in_partition_file.write(all_nodes_sorted[i] + \
                                   (',' if i != len(all_nodes_sorted) - 1 else ''))
+nodes_in_partition_file.close()
+
+graph = DotGraph(open("/home/" + username + "/nodes").readline())
+graph.print_graph()
     
 
     
