@@ -50,9 +50,8 @@ for i in xrange(len(all_nodes_sorted)):
                                   (',' if i != len(all_nodes_sorted) - 1 else ''))
 nodes_in_partition_file.close()
 
-graph = DotGraph(open("/home/" + username + "/nodes").readline())
-graph.print_graph()
-    
+DotGraph(open("/home/" + username + "/nodes").readline()).print_graph()
+
 
     
 
