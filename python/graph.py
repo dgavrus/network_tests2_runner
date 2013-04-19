@@ -15,8 +15,10 @@ class DotGraph:
         return connect_gear_string
         
     def __connect_node(self, node, gear_vertex_number, current_vertex):
+        # get the gear switch vertex number 
         gear_switch_number = ((gear_vertex_number + 1) if int(str(node)[-2:]) <= 16 \
                                                     else gear_vertex_number + 2)
+        ###
         return 'v' + str(gear_switch_number) + \
                 " -- " + \
                 'v' + str(current_vertex)
