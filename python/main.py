@@ -1,20 +1,20 @@
-from partition import Partition
-from username import get_username
+from miniutils import get_username, del_pyc
 from graph import DotGraph
 from clusterinfo import ClusterInfo
-import partition
             
 username = get_username()
 f = open("/home/" + username + "/nodelist")
 
 in_string = raw_input().split()
 partition_name = ""
+topology_graph = 0
 
 for split_string in in_string:
         if split_string.startswith("partition="):
             partition_name = split_string[len("partition="):]
-            break
-
+        elif split_string == "-g" or "--graph":
+            topology_graph = 1
+        
 nodelist = f.readlines()
 f.close()
 #del(nodelist[0])
@@ -30,7 +30,10 @@ for i in xrange(len(all_nodes_sorted)):
                                    (',' if i != len(all_nodes_sorted) - 1 else ''))
 nodes_in_partition_file.close()
 
-DotGraph(open("/home/" + username + "/nodes").readline()).print_graph()
+if topology_graph:
+    DotGraph(open("/home/" + username + "/nodes").readline()).print_graph()
+    
+#del_pyc()
 
 
     

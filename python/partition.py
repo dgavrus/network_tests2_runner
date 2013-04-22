@@ -1,8 +1,6 @@
 
-class Partition(object):
-    '''
-    classdocs
-    '''
+class Partition:
+    
     def __init__(self, name, avail, timelimit, num_of_nodes, state, nodelist):
         self.name = name
         self.avail = avail

@@ -1,4 +1,4 @@
-from username import get_username
+from miniutils import get_username
 import os
 
 class DotGraph:
