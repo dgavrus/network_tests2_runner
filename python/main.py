@@ -5,14 +5,14 @@ from clusterinfo import ClusterInfo
 username = get_username()
 f = open("/home/" + username + "/nodelist")
 
-in_string = raw_input().split()
+args = raw_input().split()
 partition_name = ""
 topology_graph = 0
 
-for split_string in in_string:
-        if split_string.startswith("partition="):
-            partition_name = split_string[len("partition="):]
-        elif split_string == "-g" or "--graph":
+for current_arg in args:
+        if current_arg.startswith("partition="):
+            partition_name = current_arg[len("partition="):]
+        elif current_arg == "-g" or "--graph":
             topology_graph = 1
         
 nodelist = f.readlines()

@@ -11,7 +11,7 @@ class DotGraph:
         connect_gear_string = ""
         for i in xrange(self.num_main_switches):
             connect_gear_string += '\t' + 'v' + str(gear) + " -- " + 'v' + str(i) + \
-                " [label=\"32Gbit/s\"]" + ';' + '\n'
+                " [label=\"32 Gbit/s\"]" + ';' + '\n'
         return connect_gear_string
         
     def __connect_node(self, node, gear_vertex_number, current_vertex):
@@ -40,12 +40,12 @@ class DotGraph:
                 gears[str(node)[:9]] = current_vertex
                 f.write('\t' + 'v' + str(current_vertex) + " [label=\"gear-" + node[6:9] + "\"]" + ';' + '\n')
                 g.write(self.__connect_gear(current_vertex))
-                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 1) + " [label=\"32Gbit/s\"]" +  ';' + '\n')
-                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 2) + " [label=\"32Gbit/s\"]" + ';' + '\n')
+                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 1) + " [label=\"32 Gbit/s\"]" +  ';' + '\n')
+                g.write('\t' + 'v' + str(current_vertex) + " -- " + 'v' + str(current_vertex + 2) + " [label=\"32 Gbit/s\"]" + ';' + '\n')
                 f.write('\t' + 'v' + str(current_vertex + 1) + " [label=\"switch1-" + node[6:9] + "\"]" + ';' + '\n')
                 f.write('\t' + 'v' + str(current_vertex + 2) + " [label=\"switch2-" + node[6:9] + "\"]" + ';' + '\n')
                 current_vertex += 3
-            g.write('\t' + self.__connect_node(node, gears[str(node)[:9]], current_vertex) + " [label=\"32Gbit/s\"]" + ';' + '\n')
+            g.write('\t' + self.__connect_node(node, gears[str(node)[:9]], current_vertex) + " [label=\"32 Gbit/s\"]" + ';' + '\n')
             f.write('\t' + 'v' + str(current_vertex) + " [label=\"" + node + "\"]" + ';' + '\n')
             current_vertex += 1
         
