@@ -28,12 +28,13 @@ nodes_in_partition_file = open("/home/" + username + "/nodes",'w')
 for i in xrange(len(all_nodes_sorted)):
     nodes_in_partition_file.write(all_nodes_sorted[i] + \
                                    (',' if i != len(all_nodes_sorted) - 1 else ''))
+    
 nodes_in_partition_file.close()
 
 if topology_graph:
     DotGraph(open("/home/" + username + "/nodes").readline()).print_graph()
     
-#del_pyc()
+del_pyc()
 
 
     
