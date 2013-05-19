@@ -24,8 +24,10 @@ class DotGraph:
                 'v' + str(current_vertex)
         
     def print_graph(self):
-        f = open("/home/" + get_username() + "/vertexes.tmp",'w')
-        g = open("/home/" + get_username() + "/nodes.tmp",'w')
+        username = get_username()
+        path = os.getcwd()[:os.getcwd().index(username) + len(username)]
+        f = open(path + "/vertexes.tmp",'w')
+        g = open(path + "/nodes.tmp",'w')
         for i in xrange(self.num_main_switches):
             f.write('\t' + 'v' + str(i) + " [label=\"main\"]" + ';' + '\n')
         current_vertex = self.num_main_switches # current vertex number
@@ -51,17 +53,17 @@ class DotGraph:
         
         f.close()
         g.close()
-        f = open("/home/" + get_username() + "/vertexes.tmp","r+")
-        g = open("/home/" + get_username() + "/nodes.tmp","r+")
+        f = open(path + "/vertexes.tmp","r+")
+        g = open(path + "/nodes.tmp","r+")
         vertexes = f.readlines()
         nodes = g.readlines()
         vertexes.sort()
         nodes.sort()
         f.close()
         g.close()
-        os.remove("/home/" + get_username() + "/vertexes.tmp")
-        os.remove("/home/" + get_username() + "/nodes.tmp")
-        f = open("/home/" + get_username() + "/topology_graph","w")
+        os.remove(path + "/vertexes.tmp")
+        os.remove(path + "/nodes.tmp")
+        f = open(path + "/topology_graph","w")
         f.write("graph topology {" + '\n')
         f.writelines(tuple(vertexes))
         f.writelines(tuple(nodes))
