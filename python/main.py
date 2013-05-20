@@ -10,14 +10,6 @@ del_res()
 
 path = os.getcwd()[:os.getcwd().index(username) + len(username) + 1] + "res/"
 
-f = open(path + "/nodelist",'w')
- 
-subprocess.call(["sinfo"], stdout=f)
-  
-f.close()
-
-f = open(path[:-4] + "nodelist")
-
 args = raw_input().split()
 
 partition_name = ""
@@ -40,7 +32,11 @@ for i in xrange(len(args)):
             tasks_per_batch = int(current_arg[str(current_arg).index("=") + 1:])
         elif current_arg == "-t":
             tasks_per_batch = int(args[i + 1])
-                     
+
+f = open(path + "nodelist",'w')
+subprocess.call(["sinfo"], stdout=f)
+f.close()
+f = open(path + "nodelist")                
 nodelist = f.readlines()
 f.close()
 #del(nodelist[0])
@@ -50,16 +46,14 @@ cluster_info = ClusterInfo(nodelist[1:])
 all_nodes_sorted = cluster_info.get_partition_nodes(partition_name)
 
 nodes_in_partition_file = open(path + "nodes",'w')
-
 for i in xrange(len(all_nodes_sorted)):
     nodes_in_partition_file.write(all_nodes_sorted[i] + \
                                    (',' if i != len(all_nodes_sorted) - 1 else '\n'))
-    
+nodes_in_partition_file.close()
+nodes_in_partition_file = open(path + "nodes",'rw')
+nodes = nodes_in_partition_file.readline().strip().split(",")
 nodes_in_partition_file.close()
 
-nodes_in_partition_file = open(path + "nodes",'rw')
-
-nodes = nodes_in_partition_file.readline().strip().split(",")
 
 i = 0
 offset_i = 0
@@ -112,15 +106,34 @@ while i < len(nodes):
         if nodefile_count == tasks_per_batch or i + offset_i >= len(nodes) - number_of_nodes_for_run:
             for nodefile_for_run in os.listdir(path):
                 if nodefile_for_run.startswith("nodefile"):
-                    subprocess.Popen("sbatch -N" + number_of_nodes_for_run + \
-                                             " --nodefile=" + nodefile_for_run + \
-                                             " ompi network_tests2", shell=True)
+                    subprocess.Popen("sbatch -N" + str(number_of_nodes_for_run) +  " -p " + \
+                                            partition_name + \
+                                            " --nodefile=" + path + nodefile_for_run + \
+                                            " ompi " + path[:-4] + "/bin/" + "network_test2 -f" + \
+                                            path + "netwtest -b 0 -e 1000", shell=True)
                     #print "sbatch -N" + str(number_of_nodes_for_run) + \
                     #                         " --nodefile=" + nodefile_for_run + \
                     #                         " ompi network_tests2"
                     os.remove(path + nodefile_for_run)
             while nodefile_count == tasks_per_batch:
-                time.sleep(60 * 30)             
+                time.sleep(60 * 30)
+                
+                f = open(path + "nodelist",'w')
+                subprocess.call(["sinfo"], stdout=f)                 
+                f.close()               
+                f = open(path + "nodelist")                
+                nodelist = f.readlines()
+                f.close()       
+                cluster_info = ClusterInfo(nodelist[1:])
+                all_nodes_sorted = cluster_info.get_partition_nodes(partition_name)
+                nodes_in_partition_file = open(path + "nodes",'w')
+                for i in xrange(len(all_nodes_sorted)):
+                    nodes_in_partition_file.write(all_nodes_sorted[i] + \
+                                                   (',' if i != len(all_nodes_sorted) - 1 else '\n'))
+                nodes_in_partition_file.close()
+                nodes_in_partition_file = open(path + "nodes",'rw')
+                nodes = nodes_in_partition_file.readline().strip().split(",")
+                nodes_in_partition_file.close()
                 squeue = subprocess.Popen("squeue | grep " + username, stdout = subprocess.PIPE, shell = True).communicate()[0]
                 tasks_now = squeue.count(username)
                 if tasks_now < tasks_per_batch:
