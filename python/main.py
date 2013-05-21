@@ -8,7 +8,7 @@ username = get_username()
 
 del_res()
 
-path = os.getcwd()[:os.getcwd().index(username) + len(username) + 1] + "res/"
+path = os.getcwd()[:os.getcwd().index(username) + len(username) + 1] + "_scratch/res/"
 
 args = raw_input().split()
 
@@ -106,11 +106,13 @@ while i < len(nodes):
         if nodefile_count == tasks_per_batch or i + offset_i >= len(nodes) - number_of_nodes_for_run:
             for nodefile_for_run in os.listdir(path):
                 if nodefile_for_run.startswith("nodefile"):
-                    subprocess.Popen("sbatch -N" + str(number_of_nodes_for_run) +  " -p " + \
-                                            partition_name + \
-                                            " --nodefile=" + path + nodefile_for_run + \
-                                            " ompi " + path[:-4] + "/bin/" + "network_test2 -f" + \
-                                            path + "netwtest -b 0 -e 1000", shell=True)
+                    current_nodefile = open(path + nodefile_for_run)
+                    running_nodelist = current_nodefile.readline().strip()
+                    subprocess.Popen("sbatch -N" + str(min(number_of_nodes_for_run,len(nodelist.strip().split(",")))) + \
+                                            " -p " + partition_name + \
+                                            " --nodelist=" + running_nodelist + \
+                                            " ompi " + path[:-4] + "ntest/" + "network_test2 -f " + \
+                                            path + "ntest" + str(test) + " -b 0 -e 1000", shell=True)
                     #print "sbatch -N" + str(number_of_nodes_for_run) + \
                     #                         " --nodefile=" + nodefile_for_run + \
                     #                         " ompi network_tests2"
